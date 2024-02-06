@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f52399d5015b014785ab855faa804fb, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: 
+  WeaponOverrideController: {fileID: 22100000, guid: bbf15b5c91f44a443b5dfa4cda6cc28e, type: 2}
+  WeaponPrefab: {fileID: 4128137807987826275, guid: 26f4ba9579a14774193ae5c71c096cc1, type: 3}
+  WeaponDamage: 20
+  WeaponRange: 2.5
