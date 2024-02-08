@@ -20,6 +20,7 @@ namespace RPG.Attributes
         private Animator animator;
         bool hasRetrievedHealthPoints = false;
         [SerializeField] UnityEvent<float> takeDamage;
+        [SerializeField] UnityEvent deathEvent;
         public bool IsDead { get; private set; }
 
 
@@ -54,11 +55,15 @@ namespace RPG.Attributes
         {
             currentHealth.value = Mathf.Max(currentHealth.value - damage, 0);
             //transform.GetComponentInChildren<SpawnDamageText>().SpawnDamageTextMethod(damage);
-            takeDamage.Invoke(damage);
             if (currentHealth.value == 0 && !IsDead)
             {
+                deathEvent.Invoke();
                 Death();
                 AwardInstigatorExperience(Instigator);
+            }
+            else
+            {
+                takeDamage.Invoke(damage);
             }
         }
 

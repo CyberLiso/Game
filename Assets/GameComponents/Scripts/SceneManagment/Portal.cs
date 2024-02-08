@@ -38,18 +38,26 @@ namespace RPG.SceneManagment
 
         private IEnumerator PortalLoadWait()
         {
+            if(sceneIndex < 0)
+            {
+                Debug.LogError("Scene has not been set!");
+                yield break;
+            }
             Fader fader = FindObjectOfType<Fader>();
+            EditPlayerControl(false);
             yield return fader.FadeOut(fadeOutTime);
             DontDestroyOnLoad(gameObject);
             SavableWrapping saver = FindObjectOfType<SavableWrapping>();
             saver.ResaveSaveFile();
             yield return SceneManager.LoadSceneAsync(sceneIndex);
+            EditPlayerControl(false);
             saver.LoadSaveFile();
             Portal NextPortal = GetPortal();
             UpdatePlayerPosition(NextPortal);
             saver.ResaveSaveFile();
             yield return new WaitForSeconds(timeToWaitInbetweenScenes);
             yield return fader.FadeIn(fadeOutTime);
+            EditPlayerControl(true);
             Destroy(gameObject);
         }
 
@@ -57,6 +65,12 @@ namespace RPG.SceneManagment
         {
             GameObject player = GameObject.FindWithTag("Player");
             player.GetComponent<NavMeshAgent>().Warp(nextPortal.portalSpawnPoint.transform.position);
+        }
+
+        public void EditPlayerControl(bool returnPlayerControl)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            player.GetComponent<MovementController>().enabled = returnPlayerControl;
         }
 
         private Portal GetPortal()

@@ -9,6 +9,7 @@ using RPG.Control;
 using RPG.Saving;
 using RPG.Stats;
 using GameDevTV.Utils;
+using UnityEngine.Events;
 
 namespace RPG.Combat
 {
@@ -19,6 +20,7 @@ namespace RPG.Combat
         [SerializeField] Transform RightHandPosition;
         [SerializeField] Transform LeftHandPosition;
         [SerializeField] Weapon DefaultWeapon = null;
+        [SerializeField] UnityEvent LaunchProjectileEvent;
         LazyValue<Weapon> currentWeapon = null;
 
         private float timeSinceLastAttack = Mathf.Infinity;
@@ -156,6 +158,7 @@ namespace RPG.Combat
         void Shoot()
         {
             currentWeapon.value.SpawnProjectile(targetLocation, LeftHandPosition, gameObject);
+            LaunchProjectileEvent.Invoke();
         }
 
         public object CaptureState()
