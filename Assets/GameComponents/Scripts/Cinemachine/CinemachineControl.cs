@@ -33,11 +33,21 @@ namespace RPG.SceneManagment
         }
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
+        {
+            Player = GameObject.FindWithTag("Player");
+        }
+
+        private void OnEnable()
         {
             GetComponent<PlayableDirector>().played += OnCutsceneBegan;
             GetComponent<PlayableDirector>().stopped += OnCutsceneFinished;
-            Player = GameObject.FindWithTag("Player");
+        }
+
+        private void OnDisable()
+        {
+            GetComponent<PlayableDirector>().played -= OnCutsceneBegan;
+            GetComponent<PlayableDirector>().stopped -= OnCutsceneFinished;
         }
 
         // Update is called once per frame

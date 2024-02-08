@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
 using RPG.Saving;
+using RPG.SceneManagment;
 
 namespace RPG.Movement
 {
-    public class Move : MonoBehaviour, IAction, IESavaeble
+    public class Move : MonoBehaviour, IAction, ISaveable
     {
 
         //Variables:
@@ -24,6 +25,10 @@ namespace RPG.Movement
         void Start()
         {
             //Gets the player's nav mesh component
+        }
+
+        private void Awake()
+        {
             player = GetComponent<NavMeshAgent>();
         }
         public void Cancel()
@@ -57,15 +62,31 @@ namespace RPG.Movement
 
         public object CaptureState()
         {
-            return new SavaebleVector3(transform.position);
+            return new SerializableVector3(transform.position);
+        }
+
+        public bool DoesPathExist(Vector3 hit, float maxDistance)
+        {
+            NavMeshPath path = new NavMeshPath();
+            if(!player.isOnNavMesh || player == null) return false;
+            bool pathExists = player.CalculatePath(hit, path);
+            float pathDistance = 0f;
+            for(int i  = 1; i < path.corners.Length; i++)
+            {
+                pathDistance += Vector3.Distance(path.corners[i - 1], path.corners[i]);
+            }
+            return pathDistance <= maxDistance && pathExists;
         }
 
         public void RestoreState(object state)
-        {
-            SavaebleVector3 restoredPlayerPosition = (SavaebleVector3)state;
-            transform.position = restoredPlayerPosition.ToVector3();
+        { 
+            SerializableVector3 savedPlayerPosition = (SerializableVector3)state;
             GetComponent<ActionSchedular>().CancelCurrentAction();
+            player.enabled = false;
+            transform.position = savedPlayerPosition.ToVector();
+            player.enabled = true;
         }
+
     }
 }
 

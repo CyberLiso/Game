@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using RPG.Combat;
 using RPG.Core;
+using RPG.Attributes;
 using RPG.Movement;
 using System;
+using GameDevTV.Utils;
 
 namespace RPG.Control
 {
@@ -35,16 +37,25 @@ namespace RPG.Control
         Move moveComponent;
         private bool isAttacking = false;
 
-        Vector3 guardLocation;
+        LazyValue<Vector3> guardLocation;
 
-        private void Start()
+        private void Awake()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
             player = GameObject.FindGameObjectWithTag("Player");
             fightInitiator = GetComponent<FightInitiator>();
             health = GetComponent<Health>();
             moveComponent = GetComponent<Move>();
-            guardLocation = transform.position;
+            guardLocation = new LazyValue<Vector3>(GetGuardLocation);
+        }
+        private void Start()
+        {
+            guardLocation.ForceInit();
+        }
+
+        private Vector3 GetGuardLocation()
+        {
+            return transform.position;
         }
         // Update is called once per frame
         void Update()
@@ -75,7 +86,7 @@ namespace RPG.Control
 
         private bool PlayerIsInRange()
         {
-            return PlayerDistance() <= distanceToGiveChase;
+            return PlayerDistance() <= distanceToGiveChase || PlayerDistance() <= GetComponent<FightInitiator>().GetCurrentWeapon().GetRange();
         }
 
         public float PlayerDistance()
@@ -97,7 +108,7 @@ namespace RPG.Control
 
         private void PatrollingBehaviour()
         {
-            Vector3 nextPosition = guardLocation;
+            Vector3 nextPosition = guardLocation.value;
             if (PatrolPath!= null)
             {
                 if (AtWaypoint())

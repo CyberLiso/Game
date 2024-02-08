@@ -5,7 +5,8 @@ using UnityEngine.AI;
 using RPG.Movement;
 using System;
 using RPG.Combat;
-using RPG.Core;
+using RPG.Attributes;
+using UnityEngine.EventSystems;
 
 namespace RPG.Control
 {
@@ -13,12 +14,22 @@ namespace RPG.Control
     {
         Health health;
         [Range(0, 1)] [SerializeField] float playerSpeed = 0.6f;
+        [SerializeField] float MaxMoveDistance;
+        [SerializeField] CursorClass[] CursorsForDifferentActions;
+        CursorModes CurrentCursorMode;
+
         // Start is called before the first frame update
-        void Start()
+
+        private void Awake()
         {
             health = GetComponent<Health>();
+            CurrentCursorMode = CursorModes.Disabled;
         }
 
+        private void Start()
+        {
+            SetCursor(CurrentCursorMode);
+        }
         // Update is called once per frame
         void Update()
         {
@@ -31,27 +42,99 @@ namespace RPG.Control
 
         private void InitiatePlayerMovement()
         {
-            if (health.IsDead) return;
-            if (InteractWithCombat()) return;
-            if (CheckForMouseInput()) return;
+            if (IsInteractingWithUI())
+            {
+                SetCursor(CursorModes.UI);
+                return;
+            }
+            if (health.IsDead)
+            {
+                SetCursor(CursorModes.Dead);
+                return;
+            }
+            if (InteractWithComponents()) return;
+            if (CheckForMouseInput())
+            {
+                return;
+            }
+            SetCursor(CursorModes.Disabled);
 
         }
 
-        private bool InteractWithCombat()
+        private bool InteractWithComponents()
         {
-            RaycastHit[] hits = Physics.RaycastAll(ConvertMousePosToRay());
+            RaycastHit[] hits = GetSortedRaycasts();
             foreach (RaycastHit hit in hits)
             {
-                CombatTargeter target = hit.collider.gameObject.GetComponent<CombatTargeter>();
-                if (target == null) continue;
-                if (!target.GetComponent<FightInitiator>().CanAttack(target.gameObject)) continue;
-                if (Input.GetMouseButton(0))
-                { 
-                    GetComponent<FightInitiator>().Attack(target.gameObject);
+                IRayCastable[] CastableComponents = hit.transform.GetComponents<IRayCastable>();
+                foreach (IRayCastable component in CastableComponents)
+                {
+                    if (component.CanHandleRaycast(this))
+                    {
+                        SetCursor(component.GetCursorType());
+                        return true;
+                    }
                 }
-                return true;
             }
+
             return false;
+        }
+
+        private RaycastHit[] GetSortedRaycasts()
+        {
+            RaycastHit[] hits = Physics.RaycastAll(ConvertMousePosToRay());
+            float[] distancesFromHits = new float[hits.Length];
+
+            for(int i = 0; i < hits.Length; i++)
+            {
+                distancesFromHits[i] = Vector3.Distance(gameObject.transform.position, hits[i].transform.position);
+            }
+
+            Array.Sort<float, RaycastHit>(distancesFromHits, hits);
+
+            return hits;
+            
+        }
+
+        private bool IsInteractingWithUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
+
+        private void SetCursor(CursorModes cursorMode)
+        {
+            if (CurrentCursorMode == cursorMode)
+            {
+                return;
+            }
+            else
+            {
+                CursorClass cursor = GetCursorClass(cursorMode);
+                CurrentCursorMode = cursorMode;
+                Cursor.SetCursor(cursor.cursorTexture, cursor.cursorPosition, CursorMode.Auto);
+            }
+        }
+
+        [System.Serializable]
+        struct CursorClass
+        {
+            public CursorModes actionMode;
+            public Texture2D cursorTexture;
+            public Vector2 cursorPosition;
+        }
+
+        private CursorClass GetCursorClass(CursorModes Mode)
+        {
+            foreach (CursorClass cursor in CursorsForDifferentActions)
+            {
+                if(cursor.actionMode == Mode)
+                {
+                    return cursor;
+                }
+            }
+
+            return new CursorClass();
         }
 
         private bool CheckForMouseInput()
@@ -65,12 +148,20 @@ namespace RPG.Control
             //The player moves to that point if a collision does occur
             if (hasRayHit)
             {
-                //We access the players Move script.
-                if (Input.GetMouseButton(0))
+                if (GetComponent<Move>().DoesPathExist(hit.point, MaxMoveDistance))
                 {
-                    GetComponent<Move>().PassiveMoveTo(hit.point, playerSpeed);
+                    SetCursor(CursorModes.Default);
+                    if (Input.GetMouseButton(0))
+                    {
+                        GetComponent<Move>().PassiveMoveTo(hit.point, playerSpeed);
+                    }
                 }
-                return true;
+                else
+                {
+                    SetCursor(CursorModes.Disabled);
+                }
+                //We access the players Move script.
+            return true;
             }
             return false;
         }

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.AI;
-using RPG.Saving;
+using RPG.Core;
+using RPG.Control;
 
 namespace RPG.SceneManagment
 {
@@ -13,7 +14,6 @@ namespace RPG.SceneManagment
         [SerializeField] int sceneIndex = -1;
         [SerializeField] Transform portalSpawnPoint;
         [Range(0, 6)] [SerializeField] float fadeOutTime = 3f;
-        [Range(0, 6)] [SerializeField] float fadeInTime = 3f;
         [Range(0, 2)] [SerializeField] float timeToWaitInbetweenScenes = 0f;
 
         enum portalDestinations
@@ -39,16 +39,15 @@ namespace RPG.SceneManagment
         private IEnumerator PortalLoadWait()
         {
             Fader fader = FindObjectOfType<Fader>();
-            SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
             yield return fader.FadeOut(fadeOutTime);
             DontDestroyOnLoad(gameObject);
-            savingWrapper.Save();
+            SavableWrapping saver = FindObjectOfType<SavableWrapping>();
+            saver.ResaveSaveFile();
             yield return SceneManager.LoadSceneAsync(sceneIndex);
-            yield return new WaitForSeconds(1f);
-            savingWrapper.Load();
+            saver.LoadSaveFile();
             Portal NextPortal = GetPortal();
             UpdatePlayerPosition(NextPortal);
-            savingWrapper.Save();
+            saver.ResaveSaveFile();
             yield return new WaitForSeconds(timeToWaitInbetweenScenes);
             yield return fader.FadeIn(fadeOutTime);
             Destroy(gameObject);
