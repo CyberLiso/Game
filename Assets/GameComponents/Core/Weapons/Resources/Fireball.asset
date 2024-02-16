@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: 
   WeaponOverrideController: {fileID: 22100000, guid: 0dec8a87acdd92a45aa8654fe941f93a, type: 2}
-  WeaponPrefab: {fileID: 0}
+  WeaponPrefab: {fileID: 1681489574546945158, guid: 2258cbd8110003a458d51c81effc9215, type: 3}
   WeaponDamage: 50
   WeaponRange: 10
   attackThrotleTime: 3.5
   isRightHanded: 1
+  PercentageBuff: 0
   isRanged: 1
   WeaponProjectile: {fileID: 5302180449279029932, guid: 6e484757637cfec4c929f5fba6a8ecb2, type: 3}

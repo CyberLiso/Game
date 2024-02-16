@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: LongBow
   m_EditorClassIdentifier: 
   WeaponOverrideController: {fileID: 22100000, guid: a0edf9c8368b08c4e80cd986f346a56b, type: 2}
-  WeaponPrefab: {fileID: 1815432329373950565, guid: 3dcefef34dc1a564fa192a276ef3f79d, type: 3}
+  WeaponPrefab: {fileID: 4581974140794504026, guid: ade76c524ee790141a6079c8928bbdec, type: 3}
   WeaponDamage: 0
   WeaponRange: 20
   attackThrotleTime: 2
   isRightHanded: 0
+  PercentageBuff: 0
   isRanged: 1
   WeaponProjectile: {fileID: 847608110903581444, guid: b37586a35d7740a48a2ec17e1b3e7907, type: 3}

@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Shortbow
   m_EditorClassIdentifier: 
   WeaponOverrideController: {fileID: 22100000, guid: a0edf9c8368b08c4e80cd986f346a56b, type: 2}
-  WeaponPrefab: {fileID: 1815432329373950565, guid: 3dcefef34dc1a564fa192a276ef3f79d, type: 3}
+  WeaponPrefab: {fileID: 3517158306778574801, guid: ec6c251b6f1da4146a8c88944c2c2813, type: 3}
   WeaponDamage: 0
   WeaponRange: 10
   attackThrotleTime: 2
   isRightHanded: 0
+  PercentageBuff: 0
   isRanged: 1
   WeaponProjectile: {fileID: 7304235989901465569, guid: 21603b2133e3cc84fbc13c04e822c1ba, type: 3}

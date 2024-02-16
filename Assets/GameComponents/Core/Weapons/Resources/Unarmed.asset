@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Unarmed
   m_EditorClassIdentifier: 
   WeaponOverrideController: {fileID: 0}
-  WeaponPrefab: {fileID: 0}
+  WeaponPrefab: {fileID: 8862580971268414065, guid: 309fb7aa2a63779419405ede51e6c502, type: 3}
   WeaponDamage: 6
   WeaponRange: 1
   attackThrotleTime: 3
   isRightHanded: 1
+  PercentageBuff: 0
   isRanged: 0
   WeaponProjectile: {fileID: 0}

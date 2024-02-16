@@ -57,6 +57,7 @@ namespace RPG.Attributes
             //transform.GetComponentInChildren<SpawnDamageText>().SpawnDamageTextMethod(damage);
             if (currentHealth.value == 0 && !IsDead)
             {
+                takeDamage.Invoke(damage);
                 deathEvent.Invoke();
                 Death();
                 AwardInstigatorExperience(Instigator);
