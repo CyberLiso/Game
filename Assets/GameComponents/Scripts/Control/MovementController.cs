@@ -42,7 +42,7 @@ namespace RPG.Control
 
         private void InitiatePlayerMovement()
         {
-            if (IsInteractingWithUI())
+           /* if (IsInteractingWithUI())
             {
                 SetCursor(CursorModes.UI);
                 return;
@@ -58,7 +58,7 @@ namespace RPG.Control
                 return;
             }
             SetCursor(CursorModes.Disabled);
-
+           */
         }
 
         private bool InteractWithComponents()
