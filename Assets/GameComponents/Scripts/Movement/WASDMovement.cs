@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using RPG.Attributes;
 namespace RPG.Movement
 {
     public class WASDMovement : MonoBehaviour
@@ -10,15 +10,14 @@ namespace RPG.Movement
         public float lookSpeed = 2f; // Speed of camera rotation
         float currentLookSpeed;
         public float jumpForce = 5f; // Force applied when jumping
-        public Vector3 cameraOffset; // Offset from the player for the camera
-        public Transform CameraPlaceholder; 
-
         private Rigidbody rb;
         private Transform mainCameraTransform;
+        Health playerHealth;
 
         void Start()
         {
             rb = GetComponent<Rigidbody>();
+            playerHealth = GetComponent<Health>();
             mainCameraTransform = Camera.main.transform;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -26,8 +25,9 @@ namespace RPG.Movement
 
         void Update()
         {
-            // Handle player movement
-            MovePlayer();
+            if (playerHealth.IsDead) return;
+                // Handle player movement
+                MovePlayer();
 
             // Handle camera follow
 
