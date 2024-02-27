@@ -42,23 +42,27 @@ namespace RPG.Control
 
         private void InitiatePlayerMovement()
         {
-           /* if (IsInteractingWithUI())
+            /* if (IsInteractingWithUI())
+             {
+                 SetCursor(CursorModes.UI);
+                 return;
+             }
+             if (health.IsDead)
+             {
+                 SetCursor(CursorModes.Dead);
+                 return;
+             }
+             if (InteractWithComponents()) return;
+             if (CheckForMouseInput())
+             {
+                 return;
+             }
+             SetCursor(CursorModes.Disabled);
+            */
+            if (Input.GetMouseButton(0))
             {
-                SetCursor(CursorModes.UI);
-                return;
+
             }
-            if (health.IsDead)
-            {
-                SetCursor(CursorModes.Dead);
-                return;
-            }
-            if (InteractWithComponents()) return;
-            if (CheckForMouseInput())
-            {
-                return;
-            }
-            SetCursor(CursorModes.Disabled);
-           */
         }
 
         private bool InteractWithComponents()

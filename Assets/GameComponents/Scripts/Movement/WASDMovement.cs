@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Attributes;
+using RPG.Inventory;
+using RPG.Combat;
+
 namespace RPG.Movement
 {
     public class WASDMovement : MonoBehaviour
@@ -19,8 +22,8 @@ namespace RPG.Movement
             rb = GetComponent<Rigidbody>();
             playerHealth = GetComponent<Health>();
             mainCameraTransform = Camera.main.transform;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
         }
 
         void Update()
@@ -71,4 +74,23 @@ namespace RPG.Movement
             float distanceToGround = 0.1f;
             return Physics.Raycast(transform.position, -Vector3.up, out hit, distanceToGround);
         }
-    }}
+
+        public void EquipInventoryItem(ItemConfig item)
+        {
+            switch (item.type)
+            {
+                case ItemConfig.ItemType.Weapon:
+                    GetComponent<DynamicCombatController>().EquipWeapon(Resources.Load<WeaponConfig>(item.name));
+                    break;
+                case ItemConfig.ItemType.Potion:
+                    break;
+                case ItemConfig.ItemType.Charm:
+                    break;
+                case ItemConfig.ItemType.Consumable:
+                    break;
+                case ItemConfig.ItemType.Valueble:
+                    break;
+            }
+        }
+    }
+}

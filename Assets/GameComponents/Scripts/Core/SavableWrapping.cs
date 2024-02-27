@@ -28,6 +28,7 @@ namespace RPG.Core
         // Update is called once per frame
         void Update()
         {
+            /*
             if (Input.GetKeyDown(KeyCode.L))
             {
                 LoadSaveFile();
@@ -36,10 +37,12 @@ namespace RPG.Core
             {
                 ResaveSaveFile();
             }
+            */
             if (Input.GetKeyDown(KeyCode.P))
             {
                 DeleteSaveFile();
             }
+            
         }
 
         private void DeleteSaveFile()

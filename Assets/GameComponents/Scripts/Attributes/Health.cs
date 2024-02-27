@@ -39,6 +39,7 @@ namespace RPG.Attributes
         void Start()
         {
             currentHealth.ForceInit();
+            FindObjectOfType<PlayerHealthBarDisplay>().ResetHealthBarValues(GetInitialHealth());
         }
 
         private void OnEnable()
@@ -62,9 +63,9 @@ namespace RPG.Attributes
                 Death();
                 AwardInstigatorExperience(Instigator);
             }
-            else
+            if (gameObject.tag == "Player")
             {
-                takeDamage.Invoke(damage);
+               StartCoroutine(FindObjectOfType<PlayerHealthBarDisplay>().ReduceHealthBarValue(currentHealth.value, GetInitialHealth()));
             }
         }
 
@@ -110,12 +111,12 @@ namespace RPG.Attributes
         public void RestoreState(object state)
         {
             float SaveableHealth = (float)state;
-            Debug.Log(SaveableHealth.ToString());
             currentHealth.value = SaveableHealth;
             if (currentHealth.value == 0)
             {
                 Death();
             }
+            hasRetrievedHealthPoints = true;
             hasRetrievedHealthPoints = true;
         }
     }

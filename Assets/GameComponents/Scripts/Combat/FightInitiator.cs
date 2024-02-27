@@ -154,7 +154,7 @@ namespace RPG.Combat
                 currentWeapon.value.OnWeaponHit();
             }
 
-            targetLocation.TakeDamage(gameObject,damage);
+            targetLocation.TakeDamage(gameObject, damage);
         }
 
         void Shoot()
@@ -179,7 +179,6 @@ namespace RPG.Combat
         {
             string savedWeaponName = (string) state;
             WeaponConfig SavedWeapon = Resources.Load<WeaponConfig>(savedWeaponName);
-            print(savedWeaponName);
             EquipWeapon(SavedWeapon);
         }
 
